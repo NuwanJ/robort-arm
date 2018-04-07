@@ -15,12 +15,11 @@
 * Description        : CtrlData 0x80 for RESET
 *************************************************************************/
 #include <EEPROM.h>
-#include <UF_uArm.h>
+#include "UF_uArm_Metal.h"
 
 int  heightTemp  = 0, stretchTemp = 0, rotationTemp = 0, handRotTemp = 0;
 char stateMachine = 0, counter = 0;
 char dataBuf[9] = {0};
-
 UF_uArm uarm;           // initialize the uArm library 
 
 void setup() 
@@ -33,7 +32,7 @@ void setup()
 void loop()
 {
   uarm.calibration();      // if corrected, you could remove it, no harm though
-  uarm.recordingMode(50);  // sampling time: 50ms
+  uarm.recordingMode(50);  // sampling time: 50ms, Recording time: 17 seconds. 
   if(Serial.available())
   {
     byte rxBuf = Serial.read();
@@ -56,7 +55,7 @@ void loop()
         {
            uarmReset();
          }
-         else{        
+         else{
             *((char *)(&rotationTemp)  )  = dataBuf[1]; // recevive 1byte
             *((char *)(&rotationTemp)+1)  = dataBuf[0]; 
             *((char *)(&stretchTemp )  )  = dataBuf[3]; 
@@ -72,7 +71,7 @@ void loop()
                Note: The air relief valve can not work for a long time, 
                should be less than ten minutes. */
             if(dataBuf[8] & RELEASE) uarm.gripperRelease();
-         }
+          }
       }
     }
   }

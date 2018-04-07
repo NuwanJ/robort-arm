@@ -9,7 +9,7 @@
 * Copyright(C) 2014 UFactory Team. All right reserved.
 *************************************************************************/
 #include <EEPROM.h>
-#include <UF_uArm.h>
+#include <UF_uArm_Metal.h>
 
 UF_uArm uarm;           // initialize the uArm library 
 

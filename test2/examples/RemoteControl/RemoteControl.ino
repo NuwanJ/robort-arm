@@ -9,7 +9,7 @@
 * Copyright(C) 2014 UFactory Team. All right reserved.
 *************************************************************************/
 #include <EEPROM.h>
-#include <UF_uArm.h>
+#include <UF_uArm_Metal.h>
 
 int  heightTemp  = 0, stretchTemp = 0, rotationTemp = 0, handRotTemp = 0;
 char stateMachine = 0, counter = 0;
