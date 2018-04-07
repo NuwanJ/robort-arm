@@ -1,2 +1,2 @@
-# robot-arm
+# robort-arm
 Arduino controlled robot arm 
