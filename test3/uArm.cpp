@@ -29,8 +29,6 @@ uArmClass::uArmClass()
   mTickRecorderTime = millis();
 }
 
-
-
 void uArmClass::initHardware()
 {
   pinMode(BTN_D4, INPUT_PULLUP);        //special mode for calibration
@@ -42,15 +40,12 @@ void uArmClass::initHardware()
 
 #ifdef MKII
   pinMode(SYS_LED, OUTPUT);
-
   digitalWrite(PUMP_EN, HIGH);//keep the pump off
 #endif
 
 #ifdef METAL
   pinMode(VALVE_EN, OUTPUT);
 #endif
-
-
 
 }
 

@@ -1,0 +1,37 @@
+*Pick And Place List
+*Company=
+*Author=
+*eMail=
+*
+*Project=v1
+*Date=21:59:43
+*CreatedBy=Fritzing 0.9.3b.04.19.5c895d327c44a3114e5fcc9d8260daf0cbb52806
+*
+*
+*Coordinates in mm, always center of component
+*Origin 0/0=Lower left corner of PCB
+*Rotation in degree (0-360, math. pos.)
+*
+*No;Value;Package;X;Y;Rotation;Side;Name
+1;;THT;26.8845;-15.1964;0;Bottom;J3
+2;;THT;63.7145;-20.2764;0;Bottom;J6
+3;;THT;31.9645;-31.7064;0;Bottom;J12
+4;;;5.29443;-55.8364;0;Bottom;Hole4
+5;;THT;29.4245;-50.7564;180;Bottom;J9
+6;;THT;61.1745;-20.2764;0;Bottom;J8
+7;;THT;58.6345;-15.1964;0;Bottom;J17
+8;;[THT];12.6244;-37.4965;-90;Bottom;S3
+9;;THT;29.4245;-15.1964;0;Bottom;J4
+10;;;66.2546;-7.57632;0;Bottom;Hole1
+11;;;66.2546;-55.8364;0;Bottom;Hole3
+12;;;5.29452;-7.57632;0;Bottom;Hole2
+13;;THT;58.6345;-22.8164;0;Bottom;J14
+14;;THT;31.9645;-15.1964;0;Bottom;J2
+15;;THT;14.0044;-15.1774;0;Bottom;J1
+16;;5 mm [THT];13.5333;-48.2164;-90;Bottom;LED1
+17;;THT;16.7245;-6.3064;-90;Bottom;J19
+18;470;1206 [SMD];25.8946;-34.2464;0;Bottom;R1
+19;;;44.6645;-29.1579;0;Bottom;Part1
+20;;[THT];12.6244;-27.3365;-90;Bottom;S4
+21;;THT;61.1745;-35.5164;0;Bottom;J16
+22;;THT;31.9645;-41.8664;0;Bottom;J18

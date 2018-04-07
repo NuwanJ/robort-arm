@@ -3,7 +3,7 @@ This Example is for Calibration on uArm.
 
 1. It will wait you press D7 to start.
 2. First it would auto detect the SERVO_LEFT maximum angle and SERVO_RIGHT minimum angle
-3. Second it would collect hundreads of point for each servo to caculate the Linear regression 
+3. Second it would collect hundreads of point for each servo to caculate the Linear regression
 4. Third it will wait you to move uArm to correct position to calibrate the SERVO_ROT, You could refer this picture.
 https://raw.githubusercontent.com/uArm-Developer/UArmForArduino/dev/examples/Metal/calibration.png
 */
@@ -17,7 +17,7 @@ https://raw.githubusercontent.com/uArm-Developer/UArmForArduino/dev/examples/Met
 #define SERVO_HAND_ROT_NUM      3
 
 #define SERVO_ROT_PIN           11
-#define SERVO_LEFT_PIN          13
+#define SERVO_LEFT_PIN          8   /* Nuwan 13 */
 #define SERVO_RIGHT_PIN         12
 #define SERVO_HAND_ROT_PIN      10
 
@@ -93,7 +93,6 @@ void setup() {
 
 void loop() {
   if (digitalRead(BTN_D7) == LOW) {
-
     delay(20);
     if (digitalRead(BTN_D7) == LOW)
     {

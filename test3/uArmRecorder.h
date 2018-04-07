@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
   * @file	uArmRecorder.h
-  * @author	David.Long	
+  * @author	David.Long
   * @email	xiaokun.long@ufactory.cc
   * @date	2016-09-30
   * @license GNU
@@ -17,9 +17,6 @@
 #include "uArmHWConfig.h"
 #include "uArmIIC.h"
 
-
-
-
 class uArmRecorder
 {
 public:
@@ -28,7 +25,6 @@ public:
 	void read(unsigned int addr, unsigned char data[], int num);
 
 private:
-
 
 };
 
