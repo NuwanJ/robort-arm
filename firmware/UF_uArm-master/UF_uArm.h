@@ -1,18 +1,18 @@
 /******************************************************************************
-  File Name          : UF_uArm.h
-  Author             : Evan
-  Updated            : Evan
-  Version            : V0.4 (BATE)
-  Created Date       : 2 May, 2014
-  Modified Date      : 16 June, 2014
-  Description        :
-  License            :
-  Copyright(C) 2014 UFactory Team. All right reserved.
+* File Name          : UF_uArm.h
+* Author             : Evan
+* Updated            : Evan
+* Version            : V0.4 (BATE)
+* Created Date       : 2 May, 2014
+* Modified Date      : 16 June, 2014
+* Description        : 
+* License            : 
+* Copyright(C) 2014 UFactory Team. All right reserved.
 *******************************************************************************
-  Updated            : Alex
-  Date               : 04 Mar, 2015
-  Version            : V0.4
-  Description        : CtrlData 0x80 for RESET
+* Updated            : Alex
+* Date               : 04 Mar, 2015
+* Version            : V0.4
+* Description        : CtrlData 0x80 for RESET
 *************************************************************************/
 
 #include <Arduino.h>
@@ -70,81 +70,70 @@
 #define SERVO_HAND_ROT          10    //
 #define SERVO_ROT               11    //
 #define SERVO_R                 12    //
-#define SERVO_L                 8    //
+#define SERVO_L                 13    //
 
 class UF_uArm
 {
-  public:
-    UF_uArm();
-    void init();    // initialize the uArm position
+public:
+	UF_uArm();
+	void init();    // initialize the uArm position
     void calibration();  //
-    void recordingMode(unsigned char _sampleDelay = 50);
-    void setPosition(double _stretch, double _height, int _armRot, int _handRot);    //
-    void setServoSpeed(char _servoNum, unsigned char _servoSpeed); // 0=full speed, 1-255 slower to faster
-    int readAngle(char _servoNum);
-    void gripperCatch();    //
-    void gripperRelease();  //
-    void gripperDetach();   //
+	void recordingMode(unsigned char _sampleDelay = 50);
+	void setPosition(double _stretch, double _height, int _armRot, int _handRot);    // 
+	void setServoSpeed(char _servoNum, unsigned char _servoSpeed); // 0=full speed, 1-255 slower to faster
+	int readAngle(char _servoNum);
+	void gripperCatch();    //
+	void gripperRelease();  //
+	void gripperDetach();   //
     void gripperDirectDetach(); //
     void pumpOn();          // pump enable
     void pumpOff();         // pump disnable
     void valveOn();         // valve enable, decompression
     void valveOff();        // valve disnable
     void detachServo(char _servoNum);
-    void sendData(byte _dataAdd, int _dataIn); //
-    void alert(int _times, int _runTime, int _stopTime);
-    void writeEEPROM();
-    void readEEPROM();
-    void play(unsigned char buttonPin);
-    void record(unsigned char buttonPin, unsigned char buttonPinC);
-    void servoBufOutL(unsigned char _lastDt, unsigned char _dt);
-    void servoBufOutR(unsigned char _lastDt, unsigned char _dt);
-    void servoBufOutRot(unsigned char _lastDt, unsigned char _dt);
-    
-   /** Custom Functions ***********************************/
-   void rawWrite(char _servoNum, unsigned char _servoSpeed, int _servoAngle);
-    
-  private:
-    /*******************  Servo offset  *******************/
-    char offsetL;
-    char offsetR;
-    /*****************  Define variables  *****************/
-    int heightLst;
-    int height;
-    int stretch;
-    int rotation;
-    int handRot;
-    boolean playFlag;
+	void sendData(byte _dataAdd, int _dataIn); //
+	void alert(int _times, int _runTime, int _stopTime);
+	void writeEEPROM();
+	void readEEPROM();
+	void play(unsigned char buttonPin);
+	void record(unsigned char buttonPin, unsigned char buttonPinC);
+	void servoBufOutL(unsigned char _lastDt, unsigned char _dt);
+	void servoBufOutR(unsigned char _lastDt, unsigned char _dt);
+	void servoBufOutRot(unsigned char _lastDt, unsigned char _dt);
+
+private:
+	/*******************  Servo offset  *******************/
+	char offsetL;
+	char offsetR;
+	/*****************  Define variables  *****************/
+	int heightLst;
+	int height;
+	int stretch; 
+	int rotation; 
+	int handRot;
+	boolean playFlag;
     boolean recordFlag;
     boolean firstFlag;
-    boolean gripperRst;
-    unsigned char sampleDelay;
-    unsigned char servoSpdR;
-    unsigned char servoSpdL;
-    unsigned char servoSpdRot;
-    unsigned char servoSpdHand;
-    unsigned char servoSpdHandRot;
-    unsigned char leftServoLast;
+	boolean gripperRst;
+	unsigned char sampleDelay;
+	unsigned char servoSpdR;
+	unsigned char servoSpdL;
+	unsigned char servoSpdRot;
+	unsigned char servoSpdHand;
+	unsigned char servoSpdHandRot;
+	unsigned char leftServoLast;
     unsigned char rightServoLast;
     unsigned char rotServoLast;
-    unsigned char griperState[14];
-    unsigned char data[3][MEMORY_SERVO_PER + 1]; // 0: L  1: R  2: Rotation
+	unsigned char griperState[14];
+	unsigned char data[3][MEMORY_SERVO_PER+1];  // 0: L  1: R  2: Rotation 
     unsigned long delay_loop;
     unsigned long lstTime;  //limit: 50days
-
- 
-    /***************  Create servo objects  ***************/
-    VarSpeedServo servoR;
-    VarSpeedServo servoL;
-    VarSpeedServo servoRot;
-    VarSpeedServo servoHand;
-    VarSpeedServo servoHandRot;
-
-    /*Servo servoR;
-    Servo servoL;
-    Servo servoRot;
-    Servo servoHand;
-    Servo servoHandRot;*/
+	/***************  Create servo objects  ***************/
+	VarSpeedServo servoR;
+	VarSpeedServo servoL;
+	VarSpeedServo servoRot;
+	VarSpeedServo servoHand;
+	VarSpeedServo servoHandRot;
 };
 
 #endif

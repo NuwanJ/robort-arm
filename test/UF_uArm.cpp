@@ -50,8 +50,8 @@ void UF_uArm::init()
   pinMode(BUZZER,   OUTPUT); digitalWrite(BUZZER,   LOW);
   pinMode(PUMP_EN,  OUTPUT); digitalWrite(PUMP_EN,  LOW);
   pinMode(VALVE_EN, OUTPUT); digitalWrite(VALVE_EN, LOW);
-  
-  if (EEPROM.read(0) == CALIBRATION_FLAG) // read of offset flag
+
+  if (1) //(EEPROM.read(0) == CALIBRATION_FLAG) // read of offset flag  /*Nuwan*/
   {
     // attaches the servo on pin to the servo object
     servoL.attach(SERVO_L, D150A_SERVO_MIN_PUL, D150A_SERVO_MAX_PUL);
@@ -66,7 +66,7 @@ void UF_uArm::init()
     servoR.write(map(readAngle(SERVO_R), SERVO_MIN, SERVO_MAX, 0, 180));
     servoRot.write(map(readAngle(SERVO_ROT), SERVO_MIN, SERVO_MAX, 0, 180));
     // initialization postion
-    
+
     setServoSpeed(SERVO_R,   20);  // 0=full speed, 1-255 slower to faster
     setServoSpeed(SERVO_L,   20);  // 0=full speed, 1-255 slower to faster
     setServoSpeed(SERVO_ROT, 20);  // 0=full speed, 1-255 slower to faster
@@ -630,28 +630,28 @@ void UF_uArm::rawWrite(char _servoNum, unsigned char _servoSpeed, int _servoAngl
   switch (_servoNum)
   {
     case SERVO_L:
+      //servoL.attach(SERVO_L, D150A_SERVO_MIN_PUL, D150A_SERVO_MAX_PUL);
       servoL.write(_servoAngle, _servoSpeed, true);
-      servoL.detach();
       break;
-      
+
     case SERVO_R:
+      //servoR.attach(SERVO_R, D150A_SERVO_MIN_PUL, D150A_SERVO_MAX_PUL);
       servoR.write(_servoAngle, _servoSpeed, true);
-      servoR.detach();
       break;
-      
+
     case SERVO_ROT:
+      //servoRot.attach(SERVO_ROT, D150A_SERVO_MIN_PUL, D150A_SERVO_MAX_PUL);
       servoRot.write(_servoAngle, _servoSpeed, true);
-      servoRot.detach();
       break;
-      
+
     case SERVO_HAND_ROT:
       //servoSpdHand = _servoSpeed;
       break;
-      
+
     case SERVO_HAND:
       //servoSpdHandRot = _servoSpeed;
       break;
-      
+
     default: break;
   }
 }
