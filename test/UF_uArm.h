@@ -100,7 +100,10 @@ class UF_uArm
     void servoBufOutL(unsigned char _lastDt, unsigned char _dt);
     void servoBufOutR(unsigned char _lastDt, unsigned char _dt);
     void servoBufOutRot(unsigned char _lastDt, unsigned char _dt);
-
+    
+   /** Custom Functions ***********************************/
+   void rawWrite(char _servoNum, unsigned char _servoSpeed, int _servoAngle);
+    
   private:
     /*******************  Servo offset  *******************/
     char offsetL;
@@ -128,12 +131,20 @@ class UF_uArm
     unsigned char data[3][MEMORY_SERVO_PER + 1]; // 0: L  1: R  2: Rotation
     unsigned long delay_loop;
     unsigned long lstTime;  //limit: 50days
+
+ 
     /***************  Create servo objects  ***************/
     VarSpeedServo servoR;
     VarSpeedServo servoL;
     VarSpeedServo servoRot;
     VarSpeedServo servoHand;
     VarSpeedServo servoHandRot;
+
+    /*Servo servoR;
+    Servo servoL;
+    Servo servoRot;
+    Servo servoHand;
+    Servo servoHandRot;*/
 };
 
 #endif
