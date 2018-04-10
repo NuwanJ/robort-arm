@@ -41,17 +41,17 @@ UF_uArm::UF_uArm()
 void UF_uArm::init()
 {
   // read offset data
-  offsetL = EEPROM.read(1);
-  offsetR = EEPROM.read(2);
+  offsetL = 0;// EEPROM.read(1);
+  offsetR = 0;//EEPROM.read(2);
   // initialization the pin
-  pinMode(LIMIT_SW, INPUT);  digitalWrite(LIMIT_SW, HIGH);
-  pinMode(BTN_D4,   INPUT);  digitalWrite(BTN_D4,   HIGH);
-  pinMode(BTN_D7,   INPUT);  digitalWrite(BTN_D7,   HIGH);
+  pinMode(LIMIT_SW, INPUT_PULLUP);  digitalWrite(LIMIT_SW, HIGH);
+  pinMode(BTN_D4,   INPUT_PULLUP);  digitalWrite(BTN_D4,   HIGH);
+  pinMode(BTN_D7,   INPUT_PULLUP);  digitalWrite(BTN_D7,   HIGH);
   pinMode(BUZZER,   OUTPUT); digitalWrite(BUZZER,   LOW);
   pinMode(PUMP_EN,  OUTPUT); digitalWrite(PUMP_EN,  LOW);
   pinMode(VALVE_EN, OUTPUT); digitalWrite(VALVE_EN, LOW);
 
-  if (1) //(EEPROM.read(0) == CALIBRATION_FLAG) // read of offset flag  /*Nuwan*/
+  if (1) // (EEPROM.read(0) == CALIBRATION_FLAG) // read of offset flag
   {
     // attaches the servo on pin to the servo object
     servoL.attach(SERVO_L, D150A_SERVO_MIN_PUL, D150A_SERVO_MAX_PUL);
@@ -62,9 +62,11 @@ void UF_uArm::init()
     servoHand.write(HAND_ANGLE_OPEN, 0, true);
     servoHand.detach();
 
-    servoL.write(map(readAngle(SERVO_L), SERVO_MIN, SERVO_MAX, 0, 180));
-    servoR.write(map(readAngle(SERVO_R), SERVO_MIN, SERVO_MAX, 0, 180));
-    servoRot.write(map(readAngle(SERVO_ROT), SERVO_MIN, SERVO_MAX, 0, 180));
+    // Disabled due to no pots
+    //servoL.write(map(readAngle(SERVO_L), SERVO_MIN, SERVO_MAX, 0, 180));
+    //servoR.write(map(readAngle(SERVO_R), SERVO_MIN, SERVO_MAX, 0, 180));
+    //servoRot.write(map(readAngle(SERVO_ROT), SERVO_MIN, SERVO_MAX, 0, 180));
+
     // initialization postion
 
     setServoSpeed(SERVO_R,   20);  // 0=full speed, 1-255 slower to faster
@@ -250,6 +252,13 @@ void UF_uArm::setPosition(double _stretch, double _height, int _armRot, int _han
   servoL.write(angleL, servoSpdL, false);
   servoRot.write(_armRot, servoSpdRot, false);
   servoHandRot.write(_handRot, servoSpdHandRot, false);
+
+  Serial.print(angleL);
+  Serial.print(" ");
+  Serial.print(angleR);
+  Serial.print(" ");
+  Serial.println(_armRot);
+
   heightLst = _height;
 }
 
@@ -623,7 +632,13 @@ void UF_uArm::servoBufOutRot(unsigned char _lastDt, unsigned char _dt)
 
 /**** Custom Functions *******************************************************/
 
-
+void UF_uArm::detachArm(){
+  detachServo(SERVO_L);
+  detachServo(SERVO_R);
+  detachServo(SERVO_ROT);
+  detachServo(SERVO_HAND_ROT);
+  detachServo(SERVO_HAND);
+}
 
 void UF_uArm::rawWrite(char _servoNum, unsigned char _servoSpeed, int _servoAngle) // 0=full speed, 1-255 slower to faster
 {

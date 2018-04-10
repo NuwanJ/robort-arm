@@ -28,124 +28,39 @@ void setup()
 
   Serial.println("uArm : Begin");
 
-  /*uarm.rawWrite(SERVO_ROT, 20, 90);
-    uarm.rawWrite(SERVO_L, 20, 90);
-    uarm.rawWrite(SERVO_R, 20, 90);
-  */
+  //uarm.rawWrite(SERVO_ROT, 20, 90);
+  //uarm.rawWrite(SERVO_L, 20, 90);
+  //uarm.rawWrite(SERVO_R, 20, 90);
+
+  delay(3000);
   //detachServo();
   /*uarm.rawWrite(SERVO_ROT, 20, 0);
     uarm.rawWrite(SERVO_ROT, 20, 180);
   */
+  Serial.println("uArm : 0,0,0,0");
+  uarm.setPosition(0, 0, 0, 0);
 }
+
+int c = 0;
 
 void loop()
 {
 
-  if (Serial.available())
-  {
-    byte rxBuf = Serial.read();
-    if (stateMachine == 0)
-    {
-      stateMachine = rxBuf == 0xFF ? 1 : 0;
-    }
-    else if (stateMachine == 1)
-    {
-      stateMachine = rxBuf == 0xAA ? 2 : 0;
-    }
-    else if (stateMachine == 2)
-    {
-      dataBuf[counter++] = rxBuf;
-      if (counter > 8) // receive 9 byte data
-      {
-        stateMachine = 0;
-        counter = 0;
-        *((char *)(&rotationTemp)  )  = dataBuf[1]; // recevive 1byte
-        *((char *)(&rotationTemp) + 1)  = dataBuf[0];
-        *((char *)(&stretchTemp )  )  = dataBuf[3];
-        *((char *)(&stretchTemp ) + 1)  = dataBuf[2];
-        *((char *)(&heightTemp  )  )  = dataBuf[5];
-        *((char *)(&heightTemp  ) + 1)  = dataBuf[4];
-        *((char *)(&handRotTemp )  )  = dataBuf[7];
-        *((char *)(&handRotTemp ) + 1)  = dataBuf[6];
-        uarm.setPosition(stretchTemp, heightTemp, rotationTemp, handRotTemp);
-        /* pump action, Valve Stop. */
-        if (dataBuf[8] & CATCH)   uarm.gripperCatch();
-        /* pump stop, Valve action.
-           Note: The air relief valve can not work for a long time,
-           should be less than ten minutes. */
-        if (dataBuf[8] & RELEASE) uarm.gripperRelease();
-      }
-    }
+  if (!digitalRead(BTN_D4)) {
+    c += 5;
+    uarm.setPosition(c, 0, 0, 0);
+
+  } else if (!digitalRead(BTN_D7)) {
+    detachServo();
   }
-  /*Serial.println(">> Loop");
-    uarm.rawWrite(SERVO_L, 20, 70);
-    delay(1000);
-    uarm.rawWrite(SERVO_L, 20, 110);
-    delay(1000);*/
-  //uarm.calibration();   // if corrected, you can remove it
 
-
-  /*motion();
-    motionReturn();*/
-
+  delay(50);
 }
 
 void detachServo()
 {
-  uarm.detachServo(SERVO_L);
-  uarm.detachServo(SERVO_R);
-  uarm.detachServo(SERVO_ROT);
-  uarm.detachServo(SERVO_HAND_ROT);
-  uarm.detachServo(SERVO_HAND);
+  detachArm();
 }
 
 
 
-
-
-
-void motion()
-{
-  uarm.setPosition(60, 0, 0, 0);    // stretch out
-  delay(400);
-  uarm.setPosition(60, -45, 0, 0);  // down
-  uarm.gripperCatch();               // catch
-  delay(400);
-  uarm.setPosition(60, 0, 0, 0);    // up
-  delay(400);
-  uarm.setPosition(60, 0, 25, 0);   // rotate
-  delay(400);
-  uarm.setPosition(60, -45, 25, 0); // down
-  delay(400);
-  uarm.gripperRelease();             // release
-  delay(100);
-  uarm.setPosition(60, 0, 25, 0);   // up
-  delay(400);
-  uarm.setPosition(0, 0, 25, 0);
-  delay(400);
-  uarm.gripperDirectDetach();        // direct detach
-  delay(500);
-}
-
-void motionReturn()
-{
-  uarm.setPosition(60, 0, 25, 0);    // stretch out
-  delay(400);
-  uarm.setPosition(60, -45, 25, 0);  // down
-  uarm.gripperCatch();                // catch
-  delay(400);
-  uarm.setPosition(60, 0, 25, 0);    // up
-  delay(400);
-  uarm.setPosition(60, 0, 0, 0);     // rotate
-  delay(400);
-  uarm.setPosition(60, -45, 0, 0);   // down
-  delay(400);
-  uarm.gripperRelease();              // release
-  delay(100);
-  uarm.setPosition(60, 0, 0, 0);     // up
-  delay(400);
-  uarm.setPosition(0, 0, 0, 0);       // original position
-  delay(400);
-  uarm.gripperDirectDetach();         // direct detach
-  delay(500);
-}
