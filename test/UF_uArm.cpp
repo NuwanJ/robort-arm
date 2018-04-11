@@ -84,6 +84,8 @@ void UF_uArm::calibration()
 {
   int initPosL = INIT_POS_L + 20; // Added 20 degrees here to start at reasonable point
   int initPosR = INIT_POS_R + 20; // Added 20 degrees here to start at reasonable point
+  Serial.println("Calibration");
+
 
   if (!digitalRead(BTN_D7))
   {
@@ -97,6 +99,7 @@ void UF_uArm::calibration()
   {
     if (millis() - lstTime > BTN_TIMEOUT_3000)
     {
+      Serial.println("Cal 1");
       // buzzer alert
       alert(2, 50, 100);
       while (!digitalRead(BTN_D7))
@@ -113,6 +116,7 @@ void UF_uArm::calibration()
 
         if (!digitalRead(BTN_D7))
         {
+          Serial.println("Cal 2");
           delay(20);
           // buzzer alert
           alert(1, 20, 0);
@@ -157,6 +161,7 @@ void UF_uArm::calibration()
       }
     }
   }
+  Serial.println("Cal End");
 }
 
 
@@ -164,8 +169,13 @@ void UF_uArm::recordingMode(unsigned char _sampleDelay)
 {
   sampleDelay = _sampleDelay;
   // D4 button - Recording mode
+
   if (!digitalRead(BTN_D4))
   {
+
+    Serial.println(">> Recording Mode");
+
+    delay(500);
     alert(2, 200, 100);
     while (!digitalRead(BTN_D4));
     delay(50);
@@ -173,11 +183,13 @@ void UF_uArm::recordingMode(unsigned char _sampleDelay)
     servoR.detach();
     servoRot.detach();
     servoHandRot.detach();
+
     while (1)
     {
       // D4 button - recording
       if (!digitalRead(BTN_D4))
       {
+        Serial.println(">> Recording...");
         recordFlag = true;
         alert(1, 50, 0);
         lstTime = millis();
@@ -185,6 +197,7 @@ void UF_uArm::recordingMode(unsigned char _sampleDelay)
         {
           if (millis() - lstTime > BTN_TIMEOUT_1000)
           {
+            Serial.println("flag=false");
             recordFlag = false;
             writeEEPROM();
             alert(1, 300, 0);
@@ -192,13 +205,16 @@ void UF_uArm::recordingMode(unsigned char _sampleDelay)
           }
         }
         delay(20);
-        if (recordFlag)
+        if (recordFlag) {
+          Serial.println("record");
           record(BTN_D4, BTN_D7);
+        }
       }
 
       // D7 button - play
       if (!digitalRead(BTN_D7))
       {
+        Serial.println(">> Playing...");
         playFlag = false;
         alert(1, 100, 0);
         if (firstFlag)
@@ -229,11 +245,13 @@ void UF_uArm::setPosition(double _stretch, double _height, int _armRot, int _han
   _armRot = -_armRot;
   if (!digitalRead(LIMIT_SW) && _height < heightLst) //limit switch protection
     _height = heightLst;
+
   // input limit
   _stretch = constrain(_stretch, ARM_STRETCH_MIN,   ARM_STRETCH_MAX) + 55;		// +55, set zero -stretch
   _height  = constrain(_height,  ARM_HEIGHT_MIN,    ARM_HEIGHT_MAX);
   _armRot  = constrain(_armRot,  ARM_ROTATION_MIN,  ARM_ROTATION_MAX) + 90;		// +90, change -90~90 to 0~180
   _handRot = constrain(_handRot, HAND_ROTATION_MIN, HAND_ROTATION_MAX) + 90;	// +90, change -90~90 to 0~180
+
   // angle calculation
   double stretch2height2 = _stretch * _stretch + _height * _height;              //
   double angleA = (acos( (ARM_A2B2 - stretch2height2) / ARM_2AB )) * RAD_TO_DEG; // angle between the upper and the lower
@@ -241,12 +259,14 @@ void UF_uArm::setPosition(double _stretch, double _height, int _armRot, int _han
   double angleC = (acos((ARM_A2 + stretch2height2 - ARM_B2) / (2 * ARM_A * sqrt(stretch2height2)))) * RAD_TO_DEG; //
   int angleR = 180 - angleA - angleB - angleC + FIXED_OFFSET_R + offsetR;        //
   int angleL = angleB + angleC + FIXED_OFFSET_L + offsetL;                       //
+
   // angle limit
   angleL = constrain(angleL, 10 + offsetL, 145 + offsetL);
   angleR = constrain(angleR, 25 + offsetR, 150 + offsetR);
   angleR = constrain(angleR, angleL - 90 + offsetR, angleR);	// behind  -120+30 = -90
   if (angleL < 15 + offsetL)
     angleR = constrain(angleR, 70 + offsetR, angleR);			// front down
+
   // set servo position
   servoR.write(angleR, servoSpdR, false);
   servoL.write(angleL, servoSpdL, false);
@@ -451,9 +471,9 @@ void UF_uArm::play(unsigned char buttonPin)
       addrC++;
     }
 
-    //    Serial.print("Read Memory-> left: ");  Serial.print(leftServo);
-    //    Serial.print("\tright: "); Serial.print(rightServo);
-    //    Serial.print("\trot: ");   Serial.println(rotServo);
+    Serial.print("Read Memory-> left: ");  Serial.print(leftServo);
+    Serial.print("\tright: "); Serial.print(rightServo);
+    Serial.print("\trot: ");   Serial.println(rotServo);
 
     servoBufOutL(leftServoLast,  leftServo);
     servoBufOutR(rightServoLast, rightServo);
@@ -465,7 +485,7 @@ void UF_uArm::play(unsigned char buttonPin)
     delay(sampleDelay);
     addr++;
   }
-  //  Serial.println("Done");
+  Serial.println("Done");
   servoL.detach();
   servoR.detach();
   servoRot.detach();
@@ -482,6 +502,7 @@ void UF_uArm::record(unsigned char buttonPin, unsigned char buttonPinC)
   memset(griperState, 0, 14); // reset griperState array
   gripperDirectDetach();
   //  Serial.println("Recording");
+
   while (digitalRead(buttonPin))
   {
     unsigned int leftServo  = map(constrain(readAngle(SERVO_L), SERVO_MIN, SERVO_MAX), SERVO_MIN, SERVO_MAX, 0, 180);
@@ -492,9 +513,9 @@ void UF_uArm::record(unsigned char buttonPin, unsigned char buttonPinC)
     data[1][addr] = rightServo;
     data[2][addr] = rotServo;
 
-    //     Serial.print(addr);Serial.print("\t");Serial.print("REC data-> left: ");  Serial.print(leftServo);
-    //     Serial.print("\tright: "); Serial.print(rightServo);
-    //     Serial.print("\trot: ");   Serial.println(rotServo);
+    Serial.print(addr); Serial.print("\t"); Serial.print("REC data-> left: ");  Serial.print(leftServo);
+    Serial.print("\tright: "); Serial.print(rightServo);
+    Serial.print("\trot: ");   Serial.println(rotServo);
 
     if (!digitalRead(buttonPinC))
     {
@@ -538,7 +559,7 @@ void UF_uArm::record(unsigned char buttonPin, unsigned char buttonPinC)
   }
   gripperDirectDetach();
   while (digitalRead(buttonPin));
-  //  Serial.println("Done");
+  Serial.println("Done");
   alert(2, 50, 100);
   firstFlag = false;
 }
@@ -632,7 +653,7 @@ void UF_uArm::servoBufOutRot(unsigned char _lastDt, unsigned char _dt)
 
 /**** Custom Functions *******************************************************/
 
-void UF_uArm::detachArm(){
+void UF_uArm::detachArm() {
   detachServo(SERVO_L);
   detachServo(SERVO_R);
   detachServo(SERVO_ROT);
@@ -640,31 +661,36 @@ void UF_uArm::detachArm(){
   detachServo(SERVO_HAND);
 }
 
+void UF_uArm::attachArm() {
+  servoL.attach(SERVO_L, D150A_SERVO_MIN_PUL, D150A_SERVO_MAX_PUL);
+  servoR.attach(SERVO_R, D150A_SERVO_MIN_PUL, D150A_SERVO_MAX_PUL);
+  servoRot.attach(SERVO_ROT, D150A_SERVO_MIN_PUL, D150A_SERVO_MAX_PUL);
+  servoHand.attach(SERVO_HAND, D009A_SERVO_MIN_PUL, D009A_SERVO_MAX_PUL);
+  servoHandRot.attach(SERVO_HAND_ROT, D009A_SERVO_MIN_PUL, D009A_SERVO_MAX_PUL);
+}
+
 void UF_uArm::rawWrite(char _servoNum, unsigned char _servoSpeed, int _servoAngle) // 0=full speed, 1-255 slower to faster
 {
   switch (_servoNum)
   {
     case SERVO_L:
-      //servoL.attach(SERVO_L, D150A_SERVO_MIN_PUL, D150A_SERVO_MAX_PUL);
       servoL.write(_servoAngle, _servoSpeed, true);
       break;
 
     case SERVO_R:
-      //servoR.attach(SERVO_R, D150A_SERVO_MIN_PUL, D150A_SERVO_MAX_PUL);
       servoR.write(_servoAngle, _servoSpeed, true);
       break;
 
     case SERVO_ROT:
-      //servoRot.attach(SERVO_ROT, D150A_SERVO_MIN_PUL, D150A_SERVO_MAX_PUL);
       servoRot.write(_servoAngle, _servoSpeed, true);
       break;
 
     case SERVO_HAND_ROT:
-      //servoSpdHand = _servoSpeed;
+      servoHandRot.write(_servoAngle, _servoSpeed, true);
       break;
 
     case SERVO_HAND:
-      //servoSpdHandRot = _servoSpeed;
+      servoHand.write(_servoAngle, _servoSpeed, true);
       break;
 
     default: break;
