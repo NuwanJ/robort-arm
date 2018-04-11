@@ -441,7 +441,9 @@ void UF_uArm::play(unsigned char buttonPin)
 {
   unsigned int addr = 0;
   unsigned char addrC = 0;
-  //  Serial.println("Playing");
+
+  Serial.println("Playing");
+
   // attaches the servo on pin to the servo object
   servoL.attach(SERVO_L, D150A_SERVO_MIN_PUL, D150A_SERVO_MAX_PUL);
   servoR.attach(SERVO_R, D150A_SERVO_MIN_PUL, D150A_SERVO_MAX_PUL);
@@ -629,7 +631,9 @@ void UF_uArm::servoBufOutR(unsigned char _lastDt, unsigned char _dt)
       servoR.write(pos);
       delay(8);
     }
-  else servoR.write(_dt);
+  else
+    servoR.write(_dt);
+
 }
 
 void UF_uArm::servoBufOutRot(unsigned char _lastDt, unsigned char _dt)
@@ -646,9 +650,10 @@ void UF_uArm::servoBufOutRot(unsigned char _lastDt, unsigned char _dt)
       servoRot.write(pos);
       delay(8);
     }
-  else servoRot.write(_dt);
-}
+  else
+    servoRot.write(_dt);
 
+}
 
 
 /**** Custom Functions *******************************************************/

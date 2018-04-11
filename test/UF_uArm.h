@@ -58,7 +58,7 @@
 #define SERVO_MIN				        80
 #define MEMORY_SERVO_PER		    335   //  eeprom: (1024 - 3 - 14)/3=335
 #define DATA_FLAG				        255
-#define BUFFER_OUTPUT			      5
+#define BUFFER_OUTPUT			      5    //5
 
 /*****************  Port definitions  *****************/
 #define BTN_D4                  4     //

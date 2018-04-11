@@ -32,7 +32,7 @@ void setup()
   */
 
   Serial.println("uArm : Begin");
-  //uarm.setPosition(0, 0, 0, 0);
+  uarm.setPosition(0, 0, 0, 0);
   delay(1000);
   uarm.alert(2, 50, 100);
   uarm.calibration();
